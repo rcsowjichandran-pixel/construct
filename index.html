@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DreamBuild | Construction &amp; Remodeling Services</title>
+    <meta
+      name="description"
+      content="DreamBuild delivers dependable residential and commercial construction, remodeling, and project management with integrity and quality craftsmanship."
+    />
+    <meta
+      name="keywords"
+      content="construction, remodeling, residential construction, commercial construction, project management, quality craftsmanship, DreamBuild"
+    />
+    <link rel="canonical" href="https://example.com/" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container navbar">
+        <a class="brand" href="index.html" aria-label="DreamBuild home">DreamBuild</a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="index.html" aria-label="Go to the DreamBuild homepage">Home</a>
+          <a href="services.html" aria-label="View DreamBuild services">Services</a>
+          <a href="contact.html" aria-label="Contact DreamBuild">Contact</a>
+        </nav>
+        <button class="hamburger" type="button" aria-label="Open navigation menu" aria-expanded="false">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </button>
+        <a class="btn" href="contact.html" aria-label="Get started with a DreamBuild project">Get Started</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero-section">
+        <div class="container hero-content">
+          <h1>Building Your Dreams</h1>
+          <p>
+            We design modern spaces and digital experiences that turn visions into
+            reality. From concept to completion, our team helps homeowners,
+            businesses, and creators build with confidence.
+          </p>
+          <nav class="hero-buttons" aria-label="Explore DreamBuild">
+            <a class="btn" href="services.html" aria-label="Explore DreamBuild services">Explore Services</a>
+            <a class="btn btn-secondary" href="contact.html" aria-label="Book a DreamBuild consultation">Book a Consultation</a>
+          </nav>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <header class="section-heading">
+            <h2>Why choose us</h2>
+            <p>
+              We combine thoughtful design, quality craftsmanship, and dependable
+              service to create spaces that inspire every day.
+            </p>
+          </header>
+
+          <div class="card-grid">
+            <article class="card">
+              <h3>Creative Design</h3>
+              <p>Beautiful, practical designs tailored to your style and goals.</p>
+            </article>
+            <article class="card">
+              <h3>Trusted Craftsmanship</h3>
+              <p>Quality materials and attention to detail in every project.</p>
+            </article>
+            <article class="card">
+              <h3>End-to-End Support</h3>
+              <p>Guidance from planning through final walkthrough and beyond.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section generated-content-section">
+        <div class="container">
+          <header class="section-heading">
+            <h2>More about DreamBuild</h2>
+            <p>Learn about our approach and the construction services we provide.</p>
+          </header>
+
+          <div class="generated-content-grid">
+            <article class="card">
+              <h3>About Us</h3>
+              <div id="about-us-content" class="generated-content loading" aria-live="polite">Loading...</div>
+            </article>
+            <article class="card">
+              <h3>Our Services</h3>
+              <div id="services-content" class="generated-content loading" aria-live="polite">Loading...</div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-section">
+        <div class="container cta-box">
+          <h2>Ready to start your next project?</h2>
+          <a class="btn" href="contact.html">Contact Us</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container footer-row">
+        <span>© 2026 DreamBuild</span>
+        <span>Email: hello@dreambuild.com | Instagram: @dreambuild</span>
+      </div>
+    </footer>
+
+    <section class="chatbot-panel" id="chatbot" aria-label="DreamBuild project assistant" hidden>
+      <header class="chatbot-header">
+        <div>
+          <h2>DreamBuild Assistant</h2>
+          <span>Here to help with your project</span>
+        </div>
+        <button class="chatbot-close" type="button" aria-label="Close chat">×</button>
+      </header>
+      <div class="chatbot-messages" id="chatMessages" role="log" aria-live="polite"></div>
+      <form class="chatbot-input" id="chatForm">
+        <label class="sr-only" for="chatInput">Your message</label>
+        <textarea id="chatInput" rows="1" placeholder="Ask about your project..." required></textarea>
+        <button class="chat-send" type="submit" aria-label="Send message">Send</button>
+      </form>
+    </section>
+    <button class="chatbot-toggle" id="chatToggle" type="button" aria-label="Open chat" aria-expanded="false">
+      <span aria-hidden="true">💬</span>
+    </button>
+
+    <script>
+      const hamburger = document.querySelector('.hamburger');
+      const nav = document.querySelector('.nav-links');
+
+      if (hamburger && nav) {
+        hamburger.addEventListener('click', () => {
+          nav.classList.toggle('mobile-open');
+          const isOpen = nav.classList.contains('mobile-open');
+          hamburger.setAttribute('aria-expanded', String(isOpen));
+          hamburger.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+        });
+      }
+
+      const chatHistory = [];
+      const chatbot = document.querySelector('#chatbot');
+      const chatToggle = document.querySelector('#chatToggle');
+      const chatClose = document.querySelector('.chatbot-close');
+      const chatMessages = document.querySelector('#chatMessages');
+      const chatForm = document.querySelector('#chatForm');
+      const chatInput = document.querySelector('#chatInput');
+      const chatSend = document.querySelector('.chat-send');
+      const localPreviewHosts = ['localhost', '127.0.0.1'];
+      const apiEndpoint = window.location.port === '5500' && localPreviewHosts.includes(window.location.hostname)
+        ? 'http://127.0.0.1:3000/api/generate'
+        : '/api/generate';
+
+      function addChatMessage(text, sender) {
+        const message = document.createElement('div');
+        message.className = `chat-message ${sender}-message`;
+        message.textContent = text;
+        chatMessages.append(message);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return message;
+      }
+
+      function setChatOpen(isOpen) {
+        chatbot.hidden = !isOpen;
+        chatToggle.setAttribute('aria-expanded', String(isOpen));
+        chatToggle.setAttribute('aria-label', isOpen ? 'Close chat' : 'Open chat');
+        if (isOpen) chatInput.focus();
+      }
+
+      async function requestGemini(prompt, history = []) {
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 35000);
+
+        try {
+          const response = await fetch(apiEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt, history }),
+            signal: controller.signal
+          });
+          const result = await response.json().catch(() => null);
+
+          if (!response.ok) {
+            if (response.status === 404 || response.status === 405) {
+              throw new Error('The chatbot API is unavailable on this host. Start the site with node server.js.');
+            }
+            throw new Error(result?.error || `The assistant request failed (${response.status}).`);
+          }
+
+          if (typeof result?.text !== 'string' || !result.text.trim()) {
+            throw new Error('The assistant returned an empty response. Please try again.');
+          }
+          return result.text.trim();
+        } catch (error) {
+          if (error.name === 'AbortError') {
+            throw new Error('The assistant took too long to respond. Please try again.');
+          }
+          if (error instanceof TypeError) {
+            throw new Error('Unable to reach the chatbot server. Start the site with node server.js.');
+          }
+          throw error;
+        } finally {
+          window.clearTimeout(timeout);
+        }
+      }
+
+      async function getGeminiResponse(prompt) {
+        const answer = await requestGemini(prompt, chatHistory.slice(-20));
+        chatHistory.push(
+          { role: 'user', text: prompt },
+          { role: 'model', text: answer }
+        );
+        return answer;
+      }
+
+      async function generateGeminiContent(prompt) {
+        return requestGemini(prompt);
+      }
+
+      function renderServiceList(container, content) {
+        const services = content
+          .split(/\r?\n/)
+          .map((line) => line.trim().replace(/^(?:[-*•]|\d+[.)])\s*/, '').trim())
+          .filter(Boolean);
+
+        if (!services.length) {
+          throw new Error('The generated services list was empty.');
+        }
+
+        const list = document.createElement('ul');
+        services.forEach((service) => {
+          const item = document.createElement('li');
+          item.textContent = service;
+          list.append(item);
+        });
+        container.replaceChildren(list);
+      }
+
+      async function loadGeneratedContent(container, prompt, renderContent) {
+        try {
+          const content = await generateGeminiContent(prompt);
+          renderContent(container, content);
+          container.classList.remove('loading');
+        } catch (error) {
+          console.error('Unable to display generated homepage content:', error);
+          container.textContent = 'Failed to load content. Please try again later.';
+          container.classList.remove('loading');
+          container.classList.add('content-error');
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const aboutUsPrompt = `Write a professional "About Us" section for DreamBuild, a construction company that serves homeowners and businesses. Use a confident, welcoming, and trustworthy tone. Emphasize integrity, quality craftsmanship, safety, clear communication, reliable project management, and lasting value. Describe a team that guides clients from planning through completion, respects their budget and timeline, and takes pride in durable, carefully finished work. Keep it concise (about 100-140 words), specific to construction, and do not invent awards, certifications, locations, or years in business. Return only the section text.`;
+        const servicesPrompt = `List the core construction services offered by DreamBuild, a company serving homeowners and businesses. Include relevant services such as new residential construction, renovations and remodeling, commercial construction, project planning and management, and finishing work. Return 5-7 concise, distinct services as a plain-text bulleted list, using one bullet per line. Do not include an introduction, fabricated credentials, or descriptions longer than one sentence.`;
+
+        const aboutUsContent = document.querySelector('#about-us-content');
+        const servicesContent = document.querySelector('#services-content');
+
+        if (aboutUsContent) {
+          loadGeneratedContent(aboutUsContent, aboutUsPrompt, (container, content) => {
+            container.textContent = content;
+          });
+        }
+
+        if (servicesContent) {
+          loadGeneratedContent(servicesContent, servicesPrompt, renderServiceList);
+        }
+      });
+
+      chatToggle.addEventListener('click', () => {
+        setChatOpen(chatbot.hidden);
+      });
+
+      chatClose.addEventListener('click', () => setChatOpen(false));
+
+      chatForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const prompt = chatInput.value.trim();
+        if (!prompt) return;
+
+        addChatMessage(prompt, 'user');
+        chatInput.value = '';
+        chatInput.disabled = true;
+        chatSend.disabled = true;
+
+        const typing = document.createElement('div');
+        typing.className = 'chat-message ai-message typing-indicator';
+        typing.setAttribute('aria-label', 'Assistant is typing');
+        typing.innerHTML = '<span></span><span></span><span></span>';
+        chatMessages.append(typing);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        try {
+          const answer = await getGeminiResponse(prompt);
+          typing.remove();
+          addChatMessage(answer, 'ai');
+        } catch (error) {
+          typing.remove();
+          addChatMessage(error.message, 'ai');
+        } finally {
+          chatInput.disabled = false;
+          chatSend.disabled = false;
+          chatInput.focus();
+        }
+      });
+
+      addChatMessage('Hello! How can I help you with your construction project?', 'ai');
+    </script>
+  </body>
+</html>
